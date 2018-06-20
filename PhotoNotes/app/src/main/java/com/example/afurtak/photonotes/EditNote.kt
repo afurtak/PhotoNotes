@@ -22,7 +22,7 @@ class EditNote : AppCompatActivity() {
             acceptImage()
         }
 
-        mEditImageView = findViewById<ImageView>(R.id.iv_edit_view)
+        mEditImageView = findViewById(R.id.iv_edit_view)
         mEditImageView.setImageBitmap(intent.extras.get("data") as Bitmap)
 
     }
