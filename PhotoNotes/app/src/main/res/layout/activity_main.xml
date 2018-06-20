@@ -6,9 +6,4 @@
     tools:context="com.example.afurtak.photonotes.MainActivity"
     android:padding="15dp">
 
-    <!--<com.example.afurtak.photonotes.DragDropView-->
-        <!--android:layout_width="30dp"-->
-        <!--android:layout_height="30dp" />-->
-
-
 </LinearLayout>
