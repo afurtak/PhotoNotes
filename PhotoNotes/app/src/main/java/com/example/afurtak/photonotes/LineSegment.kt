@@ -9,7 +9,7 @@ class LineSegment(val p1: Point, val p2: Point) : Line(p1, p2) {
     private var lastX = max(p1.x, p2.x)
     private var lastY = max(p1.y, p2.y)
 
-    val function : (Int) -> (Int) = { (it * a + c) / -b }
+    val function : (Long) -> (Long) = { (it * a + c) / -b }
 
     override fun belongs(point: Point): Boolean {
         val condition = point.x >= max(p1.x, p2.x) && point.x <= max(p1.x, p2.x)
@@ -17,7 +17,7 @@ class LineSegment(val p1: Point, val p2: Point) : Line(p1, p2) {
         return super.belongs(point) && condition
     }
 
-    override fun belongs(x: Int, y: Int) = belongs(Point(x, y))
+    override fun belongs(x: Long, y: Long) = belongs(Point(x, y))
 
     fun getNextPoint(): Point {
         incrementLastXY()

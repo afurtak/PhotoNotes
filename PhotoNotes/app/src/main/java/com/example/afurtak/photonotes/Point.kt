@@ -1,6 +1,6 @@
 package com.example.afurtak.photonotes
 
-class Point(var x: Int, var y: Int) {
+class Point(var x: Long, var y: Long) {
     constructor() : this(0, 0)
 
     fun plus(other: Point): Point {
@@ -9,5 +9,9 @@ class Point(var x: Int, var y: Int) {
 
     fun equals(other: Point): Boolean {
         return x == other.x && y == other.y
+    }
+
+    override fun toString(): String {
+        return "($x, $y)"
     }
 }

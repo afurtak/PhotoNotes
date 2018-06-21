@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
+import org.opencv.android.OpenCVLoader
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,10 +17,12 @@ class MainActivity : AppCompatActivity() {
         private const val REQUEST_IMAGE_EDIT = 2
     }
 
+    lateinit var image: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        print(OpenCVLoader.OPENCV_VERSION)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
