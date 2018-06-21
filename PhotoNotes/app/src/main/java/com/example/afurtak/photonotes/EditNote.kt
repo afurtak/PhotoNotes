@@ -1,22 +1,16 @@
 package com.example.afurtak.photonotes
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
-import android.view.Display
-import android.os.Environment.getExternalStorageDirectory
-import android.graphics.drawable.BitmapDrawable
-import android.R.attr.bitmap
-
-
-
-
+import org.opencv.android.Utils
+import org.opencv.core.Mat
+import org.opencv.core.MatOfPoint2f
+import org.opencv.core.Point
+import org.opencv.imgproc.Imgproc
+import org.opencv.android.OpenCVLoader
 
 
 class EditNote : AppCompatActivity() {
@@ -30,6 +24,13 @@ class EditNote : AppCompatActivity() {
     private lateinit var bottomLeft: DragDropView
     private lateinit var bottomRight: DragDropView
     private lateinit var bitmap: Bitmap
+
+    companion object {
+        init {
+            OpenCVLoader.initDebug()
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,13 +56,33 @@ class EditNote : AppCompatActivity() {
         val width = mEditImageView.width
         val height = mEditImageView.height
 
-        println("$width, $height")
+        val points = arrayOf(
+                Point((topLeft.x.toInt() * bitmap.width / width).toDouble(), (topLeft.y.toInt() * bitmap.height / height).toDouble()),
+                Point((topRight.x.toInt()* bitmap.width / width).toDouble(), (topRight.y.toInt() * bitmap.height / height).toDouble()),
+                Point((bottomRight.x.toInt()* bitmap.width / width).toDouble(), (bottomRight.y.toInt() * bitmap.height / height).toDouble()),
+                Point((bottomLeft.x.toInt()* bitmap.width / width).toDouble(), (bottomLeft.y.toInt() * bitmap.height / height).toDouble())
+        )
 
-        val topLeftPoint = Point((topLeft.x.toInt() * bitmap.width / width).toLong(), (topLeft.y.toInt() * bitmap.height / height).toLong())
-        val topRightPoint = Point((topRight.x.toInt()* bitmap.width / width).toLong(), (topRight.y.toInt() * bitmap.height / height).toLong())
-        val bottomLeftPoint = Point((bottomLeft.x.toInt()* bitmap.width / width).toLong(), (bottomLeft.y.toInt() * bitmap.height / height).toLong())
-        val bottomRightPoint = Point((bottomRight.x.toInt()* bitmap.width / width).toLong(), (bottomRight.y.toInt() * bitmap.height / height).toLong())
+        val src = MatOfPoint2f(
+                points[0],
+                points[1],
+                points[2],
+                points[3])
 
-        mEditImageView.setImageBitmap(parseBitmap(topLeftPoint, topRightPoint, bottomLeftPoint, bottomRightPoint, bitmap))
+        val dst = MatOfPoint2f(
+                Point(0.0, 0.0),
+                Point(bitmap.width - 1.0, 0.0),
+                Point(bitmap.width - 1.0, bitmap.height - 1.0),
+                Point(0.0, bitmap.height - 1.0))
+
+        val originalImg = Mat()
+        val destImage = Mat()
+        val warpMat = Imgproc.getPerspectiveTransform(src, dst)
+
+        Utils.bitmapToMat(bitmap.copy(Bitmap.Config.ARGB_8888, true), originalImg)
+        Imgproc.warpPerspective(originalImg, destImage, warpMat, originalImg.size())
+        Utils.matToBitmap(destImage, bitmap)
+
+        mEditImageView.setImageBitmap(bitmap)
     }
 }
