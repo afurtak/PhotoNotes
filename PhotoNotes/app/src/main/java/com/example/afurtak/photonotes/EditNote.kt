@@ -81,8 +81,10 @@ class EditNote : AppCompatActivity() {
 
         Utils.bitmapToMat(bitmap.copy(Bitmap.Config.ARGB_8888, true), originalImg)
         Imgproc.warpPerspective(originalImg, destImage, warpMat, originalImg.size())
-        Utils.matToBitmap(destImage, bitmap)
+        Imgproc.cvtColor(destImage, destImage, Imgproc.COLOR_RGB2GRAY)
+        Imgproc.adaptiveThreshold(destImage, destImage, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 11, 2.0)
 
+        Utils.matToBitmap(destImage, bitmap)
         mEditImageView.setImageBitmap(bitmap)
     }
 }
