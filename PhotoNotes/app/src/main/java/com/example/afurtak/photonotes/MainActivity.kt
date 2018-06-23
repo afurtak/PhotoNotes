@@ -5,10 +5,10 @@ import android.graphics.Bitmap
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import org.opencv.android.OpenCVLoader
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,12 +17,17 @@ class MainActivity : AppCompatActivity() {
         private const val REQUEST_IMAGE_EDIT = 2
     }
 
-    lateinit var image: ImageView
+    lateinit var mNotesExplorer: RecyclerView
+    lateinit var layoutManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        print(OpenCVLoader.OPENCV_VERSION)
+
+        mNotesExplorer = findViewById(R.id.rv_notes_explorer)
+        layoutManager = GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
+        mNotesExplorer.adapter = NotesExplorerAdapter(this)
+        mNotesExplorer.layoutManager = layoutManager
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

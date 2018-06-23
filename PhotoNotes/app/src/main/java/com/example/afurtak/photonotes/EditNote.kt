@@ -53,15 +53,21 @@ class EditNote : AppCompatActivity() {
     }
 
     private fun acceptImage() {
+        val destImage = perspectiveTransform()
+
+        Utils.matToBitmap(destImage, bitmap)
+        mEditImageView.setImageBitmap(bitmap)
+    }
+
+    private fun perspectiveTransform(): Mat {
         val width = mEditImageView.width
         val height = mEditImageView.height
 
         val points = arrayOf(
-                Point((topLeft.x.toInt() * bitmap.width / width).toDouble(), (topLeft.y.toInt() * bitmap.height / height).toDouble()),
-                Point((topRight.x.toInt()* bitmap.width / width).toDouble(), (topRight.y.toInt() * bitmap.height / height).toDouble()),
-                Point((bottomRight.x.toInt()* bitmap.width / width).toDouble(), (bottomRight.y.toInt() * bitmap.height / height).toDouble()),
-                Point((bottomLeft.x.toInt()* bitmap.width / width).toDouble(), (bottomLeft.y.toInt() * bitmap.height / height).toDouble())
-        )
+                topLeft.getRescalePoint(bitmap.width, bitmap.height, width, height),
+                topRight.getRescalePoint(bitmap.width, bitmap.height, width, height),
+                bottomRight.getRescalePoint(bitmap.width, bitmap.height, width, height),
+                bottomLeft.getRescalePoint(bitmap.width, bitmap.height, width, height))
 
         val src = MatOfPoint2f(
                 points[0],
@@ -83,8 +89,6 @@ class EditNote : AppCompatActivity() {
         Imgproc.warpPerspective(originalImg, destImage, warpMat, originalImg.size())
         Imgproc.cvtColor(destImage, destImage, Imgproc.COLOR_RGB2GRAY)
         Imgproc.adaptiveThreshold(destImage, destImage, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 11, 2.0)
-
-        Utils.matToBitmap(destImage, bitmap)
-        mEditImageView.setImageBitmap(bitmap)
+        return destImage
     }
 }

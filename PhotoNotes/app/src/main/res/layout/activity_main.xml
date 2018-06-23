@@ -6,9 +6,9 @@
     tools:context="com.example.afurtak.photonotes.MainActivity"
     android:padding="15dp">
 
-    <ImageView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/iv_bitmap"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/rv_notes_explorer"/>
 
 </LinearLayout>
