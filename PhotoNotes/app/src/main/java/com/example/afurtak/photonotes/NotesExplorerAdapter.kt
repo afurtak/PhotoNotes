@@ -12,15 +12,27 @@ class NotesExplorerAdapter(private val context: Context, private var path: Strin
 
     constructor(context: Context) : this(context, ".")
 
+    fun goToFolder(folder: String) {
+        path += "/$folder"
+        notifyDataSetChanged()
+    }
+
+    fun goToPreviousFolder() {
+        if (path != ".")
+            path = path.dropLast(path.length - path.lastIndexOf('/'))
+
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.notes_explorer_item, parent, false)
+
         val holder = Holder(view)
         view.setOnClickListener({
-            path += "/" + File(context.filesDir, path).listFiles()
-                    .filter { it.isDirectory }[holder.adapterPosition].name
-            notifyDataSetChanged()
+            goToFolder(File(context.filesDir, path).listFiles()
+                    .filter { it.isDirectory }[holder.adapterPosition].name)
         })
         return holder
     }

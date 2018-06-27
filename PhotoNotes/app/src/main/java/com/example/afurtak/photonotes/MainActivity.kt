@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -20,15 +21,21 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var mNotesExplorer: RecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
+    lateinit var mPreviousDirectoryButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val notesExplorerAdapter = NotesExplorerAdapter(this)
+
         mNotesExplorer = findViewById(R.id.rv_notes_explorer)
         layoutManager = GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
-        mNotesExplorer.adapter = NotesExplorerAdapter(this)
+        mNotesExplorer.adapter = notesExplorerAdapter
         mNotesExplorer.layoutManager = layoutManager
+
+        mPreviousDirectoryButton = findViewById(R.id.button_previous_directory)
+        mPreviousDirectoryButton.setOnClickListener({ notesExplorerAdapter.goToPreviousFolder() })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
