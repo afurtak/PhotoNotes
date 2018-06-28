@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.Button
+import org.opencv.core.Point
 
 class DragDropView(context: Context, attributes: AttributeSet) : Button(context, attributes) {
 
@@ -15,6 +16,10 @@ class DragDropView(context: Context, attributes: AttributeSet) : Button(context,
 
     private var dX = 0F
     private var dY = 0F
+
+    fun getRescalePoint(realWidth: Int, realHeight: Int, showingWidth: Int, showingHeight: Int): Point {
+        return Point((realWidth * x / showingWidth).toDouble(), (realHeight * y / showingHeight).toDouble())
+    }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event!!.action) {

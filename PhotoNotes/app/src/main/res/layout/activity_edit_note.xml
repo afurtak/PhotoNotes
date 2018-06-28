@@ -52,7 +52,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/top_right"/>
+        android:id="@+id/top_right" />
 
     <Button
         android:id="@+id/button_accept_note"

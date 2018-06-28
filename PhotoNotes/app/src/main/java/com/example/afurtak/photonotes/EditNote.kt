@@ -1,5 +1,6 @@
 package com.example.afurtak.photonotes
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -12,12 +13,10 @@ import org.opencv.core.Point
 import org.opencv.imgproc.Imgproc
 import org.opencv.android.OpenCVLoader
 
-
 class EditNote : AppCompatActivity() {
 
-
-    private lateinit var mEditImageView: ImageView
-    private lateinit var mAcceptButton: Button
+    private lateinit var editNoteImage: ImageView
+    private lateinit var acceptButton: Button
 
     private lateinit var topLeft: DragDropView
     private lateinit var topRight: DragDropView
@@ -31,37 +30,47 @@ class EditNote : AppCompatActivity() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_note)
 
-        mAcceptButton = findViewById(R.id.button_accept_note)
-        mAcceptButton.setOnClickListener {
+        acceptButton = findViewById(R.id.button_accept_note)
+        acceptButton.setOnClickListener {
             acceptImage()
         }
 
-        mEditImageView = findViewById(R.id.iv_edit_view)
+        editNoteImage = findViewById(R.id.iv_edit_view)
         bitmap = intent.extras.get("data") as Bitmap
-        mEditImageView.setImageBitmap(bitmap)
+        editNoteImage.setImageBitmap(bitmap)
 
         topLeft = findViewById(R.id.top_left)
         topRight = findViewById(R.id.top_right)
         bottomLeft = findViewById(R.id.bottom_left)
         bottomRight = findViewById(R.id.bottom_right)
-
     }
 
     private fun acceptImage() {
-        val width = mEditImageView.width
-        val height = mEditImageView.height
+        val destImage = perspectiveTransform()
+        Utils.matToBitmap(destImage, bitmap)
+        editNoteImage.setImageBitmap(bitmap)
+        openSaveNoteActivity()
+    }
+
+    private fun openSaveNoteActivity() {
+        val saveNoteIntent = Intent(this, SaveNoteActivity::class.java)
+        saveNoteIntent.putExtra("data", bitmap)
+        startActivity(saveNoteIntent)
+    }
+
+    private fun perspectiveTransform(): Mat {
+        val width = editNoteImage.width
+        val height = editNoteImage.height
 
         val points = arrayOf(
-                Point((topLeft.x.toInt() * bitmap.width / width).toDouble(), (topLeft.y.toInt() * bitmap.height / height).toDouble()),
-                Point((topRight.x.toInt()* bitmap.width / width).toDouble(), (topRight.y.toInt() * bitmap.height / height).toDouble()),
-                Point((bottomRight.x.toInt()* bitmap.width / width).toDouble(), (bottomRight.y.toInt() * bitmap.height / height).toDouble()),
-                Point((bottomLeft.x.toInt()* bitmap.width / width).toDouble(), (bottomLeft.y.toInt() * bitmap.height / height).toDouble())
-        )
+                topLeft.getRescalePoint(bitmap.width, bitmap.height, width, height),
+                topRight.getRescalePoint(bitmap.width, bitmap.height, width, height),
+                bottomRight.getRescalePoint(bitmap.width, bitmap.height, width, height),
+                bottomLeft.getRescalePoint(bitmap.width, bitmap.height, width, height))
 
         val src = MatOfPoint2f(
                 points[0],
@@ -81,8 +90,9 @@ class EditNote : AppCompatActivity() {
 
         Utils.bitmapToMat(bitmap.copy(Bitmap.Config.ARGB_8888, true), originalImg)
         Imgproc.warpPerspective(originalImg, destImage, warpMat, originalImg.size())
-        Utils.matToBitmap(destImage, bitmap)
+        Imgproc.cvtColor(destImage, destImage, Imgproc.COLOR_RGB2GRAY)
+        Imgproc.adaptiveThreshold(destImage, destImage, 255.0, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 11, 2.0)
 
-        mEditImageView.setImageBitmap(bitmap)
+        return destImage
     }
 }

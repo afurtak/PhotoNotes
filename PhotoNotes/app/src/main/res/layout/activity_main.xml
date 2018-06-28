@@ -4,11 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.afurtak.photonotes.MainActivity"
-    android:padding="15dp">
+    android:padding="15dp"
+    android:orientation="vertical">
 
-    <ImageView
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_previous_directory"/>
+
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/iv_bitmap"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/rv_notes_explorer"/>
 
 </LinearLayout>
