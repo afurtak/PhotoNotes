@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,9 +52,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            openEditActivity(data!!.extras.get("data") as Bitmap)
-        }
+        if (data != null)
+            if (requestCode == REQUEST_IMAGE_CAPTURE && data.hasExtra("data")) {
+                openEditActivity(data.extras.get("data") as Bitmap)
+            }
 
     }
 

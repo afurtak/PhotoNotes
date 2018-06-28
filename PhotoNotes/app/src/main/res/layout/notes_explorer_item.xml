@@ -2,19 +2,23 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:padding="10dp">
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:src="@drawable/folder"
+        android:id="@+id/iv_icon"
+        android:scaleType="fitCenter"
         />
+
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:textSize="20sp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="false"
+        android:layout_height="40dp"
+        android:textSize="12sp"
         android:id="@+id/tv_item_label"
         android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/iv_icon"
         android:text="asdf"/>
 </RelativeLayout>
