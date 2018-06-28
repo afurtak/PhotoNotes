@@ -77,6 +77,9 @@ class NotesExplorerAdapter(private val context: Context, private var path: Strin
                     e.printStackTrace()
                 }
             }
+            else {
+                mIconImageView.setImageResource(R.drawable.folder)
+            }
         }
     }
 }
